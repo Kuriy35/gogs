@@ -4,6 +4,7 @@ pipeline {
     environment {
         BINARY_NAME = "gogs"
         PATH = "/usr/local/bin:/usr/local/go/bin:/usr/bin:/bin:${env.PATH}"
+        CGO_ENABLED = '1'
     }
 
     stages {
