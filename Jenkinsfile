@@ -1,18 +1,31 @@
 pipeline {
     agent any
 
+    environment {
+        BINARY_NAME = "gogs"
+    }
+
     stages {
-        stage('Checkout') {
+        stage('Lint') {
             steps {
-                echo 'Checkout code...'
-                checkout scm
+                echo 'Run golangci-lint...'
+                sh 'golangci-lint run'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Run unit tests...'
+                sh 'go test ./...'
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Building...'
+                echo 'Build binary...'
+                sh "go build -o ${BINARY_NAME}"
             }
         }
     }
 }
+
