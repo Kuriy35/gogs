@@ -5,7 +5,7 @@ pipeline {
         BINARY_NAME = "gogs"
         PATH = "/usr/local/bin:/usr/local/go/bin:/usr/bin:/bin:${env.PATH}"
         CGO_ENABLED = '1'
-        SSH_KEY = "/var/lib/jenkins/.ssh/id_rsa_ansibleVM.pub"
+        SSH_KEY = "/var/lib/jenkins/.ssh/id_rsa_ansibleVM"
         ANSIBLE_USER = "vagrant"
         ANSIBLE_HOST_ADDRESS = "192.168.56.100"
         REMOTE_BINARY_PATH = "/tmp/${BINARY_NAME}_new"
