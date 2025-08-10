@@ -10,7 +10,7 @@ pipeline {
         ANSIBLE_HOST_ADDRESS = "192.168.56.100"
         REMOTE_BINARY_PATH = "/tmp/${BINARY_NAME}_new"
         ANSIBLE_DIR_PATH = "/home/vagrant/ansible"
-        PLAYBOOK_PATH_FROM_DIR = "playbooks/deployment_playbook.yml"
+        PLAYBOOK_PATH_FROM_DIR = "/home/vagrant/ansible/playbooks/deployment_playbook.yml"
     }
 
     stages {
