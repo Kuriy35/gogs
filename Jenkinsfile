@@ -9,7 +9,8 @@ pipeline {
         ANSIBLE_USER = "vagrant"
         ANSIBLE_HOST_ADDRESS = "192.168.56.100"
         REMOTE_BINARY_PATH = "/tmp/${BINARY_NAME}_new"
-        PLAYBOOK_PATH = "/home/vagrant/ansible/playbooks/deployment_playbook.yml"
+        ANSIBLE_DIR_PATH = "/home/vagrant/ansible"
+        PLAYBOOK_PATH_FROM_DIR = "/playbooks/deployment_playbook.yml"
     }
 
     stages {
@@ -57,7 +58,8 @@ pipeline {
                 echo '----- Run Ansible playbook -----'
                 sh """
                	    ssh -i ${SSH_KEY} ${ANSIBLE_USER}@${ANSIBLE_HOST_ADDRESS} \\
-                    "ansible-playbook ${PLAYBOOK_PATH} --extra-vars 'new_binary_name=${BINARY_NAME}_new'"
+                    "cd ${ANSIBLE_DIR_PATH} && \\
+                    ansible-playbook ${PLAYBOOK_PATH_FROM_DIR} --extra-vars 'new_binary_name=${BINARY_NAME}_new'"
                 """
             }
         }
