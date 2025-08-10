@@ -59,7 +59,7 @@ pipeline {
                 echo '----- Run Ansible playbook -----'
                 withCredentials([sshUserPrivateKey(credentialsId: 'ansible-master-vm-key', 
                 keyFileVariable: 'SSH_KEY')]) { 
-                    sh([['ssh', '-i', SSH_KEY, "${ANSIBLE_USER}@${ANSIBLE_HOST_ADDRESS}",
+                    sh(['ssh', '-i', SSH_KEY, "${ANSIBLE_USER}@${ANSIBLE_HOST_ADDRESS}",
                     "cd ${ANSIBLE_DIR_PATH} && ansible-playbook ${PLAYBOOK_PATH_FROM_DIR} --extra-vars 'new_binary_name=${BINARY_NAME}_new'"])
                 }
             }
