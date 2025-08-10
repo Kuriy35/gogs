@@ -56,7 +56,7 @@ pipeline {
             steps { 
                 echo '----- Run Ansible playbook -----'
                 sh """
-               	    ssh -i ${SSH_KEY} ${ANSIBLE_USER}@{ANSIBLE_HOST_ADDRESS} \\
+               	    ssh -i ${SSH_KEY} ${ANSIBLE_USER}@${ANSIBLE_HOST_ADDRESS} \\
                     "ansible-playbook ${PLAYBOOK_PATH} --extra-vars 'new_binary_name=${BINARY_NAME}_new'"
                 """
             }
