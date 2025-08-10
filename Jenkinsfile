@@ -46,9 +46,8 @@ pipeline {
             steps {
                 echo '----- Copying binary -----'
                 withCredentials([sshUserPrivateKey(credentialsId: 'ansible-master-vm-key', keyFileVariable: 'SSH_KEY')]) {
-                    sh """
-                        scp -i ${SSH_KEY} ${BINARY_NAME} ${ANSIBLE_USER}@${ANSIBLE_HOST_ADDRESS}:${REMOTE_BINARY_PATH}
-                    """
+                    sh(['scp', '-i', SSH_KEY, BINARY_NAME, \\
+                    "${ANSIBLE_USER}@{ANSIBLE_HOST_ADDRESS}:${REMOTE_BINARY_PATH}"])
                 }
             }
             
@@ -58,11 +57,9 @@ pipeline {
             steps { 
                 echo '----- Run Ansible playbook -----'
                 withCredentials([sshUserPrivateKey(credentialsId: 'ansible-master-vm-key', keyFileVariable: 'SSH_KEY')]) { 
-                    sh """
-               	        ssh -i ${SSH_KEY} ${ANSIBLE_USER}@${ANSIBLE_HOST_ADDRESS} \\
-                        "cd ${ANSIBLE_DIR_PATH} && \\
-                        ansible-playbook ${PLAYBOOK_PATH_FROM_DIR} --extra-vars 'new_binary_name=${BINARY_NAME}_new'"
-                    """
+                    sh([['ssh', '-i', SSH_KEY, "${ANSIBLE_USER}@${ANSIBLE_HOST_ADDRESS}", \\
+                    "cd ${ANSIBLE_DIR_PATH} && ansible-playbook ${PLAYBOOK_PATH_FROM_DIR} \\
+                    --extra-vars 'new_binary_name=${BINARY_NAME}_new'"])
                 }
             }
         }
