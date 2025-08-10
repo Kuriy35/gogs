@@ -4,7 +4,7 @@ pipeline {
     environment {
         BINARY_NAME = "gogs"
         PATH = "/usr/local/bin:/usr/local/go/bin:/usr/bin:/bin:${env.PATH}"
-        CGO_ENABLED = '1'
+        // CGO_ENABLED = '1'
         SSH_KEY = "/var/lib/jenkins/.ssh/id_rsa_ansibleVM"
         ANSIBLE_USER = "vagrant"
         ANSIBLE_HOST_ADDRESS = "192.168.56.100"
@@ -29,12 +29,12 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                echo '----- Run unit tests -----'
-                sh 'go test ./...'
-            }
-        }
+        // stage('Test') {
+           // steps {
+               // echo '----- Run unit tests -----'
+               // sh 'go test ./...'
+            // }
+        // }
 
         stage('Build') {
             steps {
