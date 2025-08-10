@@ -37,7 +37,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo '----- Build binary -----'
+                echo '------- Build binary -------'
                 sh "go build -o ${BINARY_NAME}"
             }
         }
