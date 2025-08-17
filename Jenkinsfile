@@ -61,8 +61,8 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ansible-master-vm-key', 
                 keyFileVariable: 'SSH_KEY')]) { 
                     sh """
-                        ssh -i \$SSH_KEY ${ANSIBLE_USER}@${ANSIBLE_HOST_ADDRESS} \\
-                        "cd ${ANSIBLE_DIR_PATH} && \\
+                        ssh -i \$SSH_KEY ${ANSIBLE_USER}@${ANSIBLE_HOST_ADDRESS} \
+                        "cd ${ANSIBLE_DIR_PATH} && \
                         ansible-playbook ${PLAYBOOK_PATH_FROM_DIR} --extra-vars 'IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG_LATEST}'"
                     """
                 }
