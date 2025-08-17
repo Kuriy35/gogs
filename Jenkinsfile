@@ -2,22 +2,19 @@ pipeline {
     agent any
 
     environment {
-        BINARY_NAME = "gogs"
-        PATH = "/usr/local/bin:/usr/local/go/bin:/usr/bin:/bin:${env.PATH}"
-        CGO_ENABLED = '1'
+        IMAGE_NAME = "kuriy35/mygogsapp"
+        IMAGE_TAG_LATEST = "latest"
         ANSIBLE_USER = "vagrant"
         ANSIBLE_HOST_ADDRESS = "192.168.56.100"
-        REMOTE_BINARY_PATH = "/tmp/${BINARY_NAME}_new"
         ANSIBLE_DIR_PATH = "/home/vagrant/ansible"
-        PLAYBOOK_PATH_FROM_DIR = "playbooks/deployment_playbook.yml"
+        PLAYBOOK_PATH_FROM_DIR = "playbooks/deploy_with_docker_playbook.yml"
     }
 
     stages {
         stage('Check Tools') {
            steps {
-                echo '----- Check if available go tools -----'
-                sh 'go version'
-                sh 'golangci-lint version'
+                echo '----- Check if available docker -----'
+                sh 'docker --version'
             }
         }
         
@@ -35,20 +32,22 @@ pipeline {
            }
         }
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                echo '------- Build binary -------'
-                sh "go build -o ${BINARY_NAME}"
+                echo '------- Build Docker Image -------'
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG_LATEST} ."
             }
         }
 
-        stage('Copy binary to Ansible VM') {
+        stage('Push Docker Image') {
             steps {
-                echo '----- Copying binary -----'
-                withCredentials([sshUserPrivateKey(credentialsId: 'ansible-master-vm-key', 
-                keyFileVariable: 'SSH_KEY')]) {
+                echo '----- Pushing Docker Image -----'
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', 
+                usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh """
-                        scp -i "\$SSH_KEY" ${BINARY_NAME} ${ANSIBLE_USER}@${ANSIBLE_HOST_ADDRESS}:${REMOTE_BINARY_PATH}
+                        echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
+                        docker push ${IMAGE_NAME}:${IMAGE_TAG_LATEST}
+                        docker logout
                     """
                 }
             }
@@ -61,9 +60,9 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ansible-master-vm-key', 
                 keyFileVariable: 'SSH_KEY')]) { 
                     sh """
-                        ssh -i "\$SSH_KEY" ${ANSIBLE_USER}@${ANSIBLE_HOST_ADDRESS} \\
+                        ssh -i \$SSH_KEY ${ANSIBLE_USER}@${ANSIBLE_HOST_ADDRESS} \\
                         "cd ${ANSIBLE_DIR_PATH} && \\
-                        ansible-playbook ${PLAYBOOK_PATH_FROM_DIR} --extra-vars 'new_binary_name=${BINARY_NAME}_new'"
+                        ansible-playbook ${PLAYBOOK_PATH_FROM_DIR} --extra-vars 'IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG_LATEST}'"
                     """
                 }
             }
