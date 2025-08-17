@@ -33,12 +33,12 @@ pipeline {
            }
         }
 
-       # stage('Build Docker Image') {
-        #    steps {
-         #       echo '------- Build Docker Image -------'
-          #      sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG_LATEST} ."
-           # }
-       # }
+       // stage('Build Docker Image') {
+        //    steps {
+         //       echo '------- Build Docker Image -------'
+          //      sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG_LATEST} ."
+           // }
+       // }
 
         stage('Push Docker Image') {
             steps {
