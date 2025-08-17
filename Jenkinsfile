@@ -4,6 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "kuriy35/mygogsapp"
         IMAGE_TAG_LATEST = "latest"
+        PATH = "/usr/local/bin:/usr/local/go/bin:/usr/bin:/bin:${env.PATH}"
         ANSIBLE_USER = "vagrant"
         ANSIBLE_HOST_ADDRESS = "192.168.56.100"
         ANSIBLE_DIR_PATH = "/home/vagrant/ansible"
